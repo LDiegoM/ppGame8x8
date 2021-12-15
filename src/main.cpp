@@ -44,17 +44,6 @@ int joystickYValue;
 // Button handling, avoiding bounce and sticky conditions
 Button* button;
 
-// Implements 3 game levels
-Timer* levelTimers[] = {
-  new Timer(2000, ULONG_MAX, millis),
-  new Timer(1250, ULONG_MAX, millis),
-  new Timer(800, ULONG_MAX, millis)
-};
-byte currentLevel;
-byte levelCount = sizeof(levelTimers) / sizeof(Timer*);
-Timer* levelTimer;
-bool levelChanged = false;
-
 bool gameRunning;
 
 // Handle no action made by player. If player doesn't press the button for 5 cycles, loses 1 point
@@ -64,7 +53,6 @@ byte noActionCount;
 void startNewGame();
 void endGame();
 void buttonPressed();
-void calculateScoreAndLevel(bool pointWon);
 displayPoint getRandomPoint();
 bool evaluateHitOrMiss();
 
@@ -89,7 +77,6 @@ void setup() {
 
     gameRunning = false;
 
-    gameScore->showNewScore(currentScore);
     beginAnimation();
     animationTimer = new Timer(40, ULONG_MAX, millis);
     animationTimer->start();
@@ -114,17 +101,16 @@ void loop() {
         if (levelTimer->isTime()) {
             noActionCount++;
             if (noActionCount >= MAX_NO_ACTION_CYCLES) {
-                calculateScoreAndLevel(false);
+                gameScore->calculateScoreAndLevel(false);
 
                 // Reset the no action counter
                 noActionCount = 0;
 
                 // Due to point decrement, the game may finish
-                if (!gameRunning)
+                if (gameScore->gameEnd()) {
+                    endGame();
                     return;
-
-                if (levelChanged)
-                    levelTimer->start();
+                }
             }
             // Get a new random point
             randomPosition = getRandomPoint();
@@ -139,15 +125,9 @@ void loop() {
 }
 
 void startNewGame() {
-    // Game starts with score = 3
-    currentScore = STARTING_SCORE;
-    gameScore->showNewScore(currentScore);
+    gameScore->resetScoreAndLevel();
 
-    // Choose the easier game level
-    currentLevel = 1;
-    levelTimer = levelTimers[currentLevel - 1];
-    levelChanged = false;
-
+    // Reset the no action counter
     noActionCount = 0;
 
     // Gets the first random point of the game
@@ -162,7 +142,6 @@ void startNewGame() {
 }
 
 void endGame() {
-    levelTimer->stop();
     gameRunning = false;
     beginAnimation();
     animationTimer->start();
@@ -172,54 +151,19 @@ void buttonPressed() {
     if (!gameRunning) {
         startNewGame();
     } else {
-        calculateScoreAndLevel(evaluateHitOrMiss());
+        gameScore->calculateScoreAndLevel(evaluateHitOrMiss());
 
+        // Reset the no action counter
         noActionCount = 0;
 
-        // Get a new random point
-        randomPosition = getRandomPoint();
-        levelTimer->start();
-    }
-}
-
-void calculateScoreAndLevel(bool pointWon) {
-    if (pointWon)
-        currentScore++;
-    else
-        currentScore--;
-
-    if (currentScore == 0) {
-        currentLevel--;
-        levelChanged = true;
-    } else if (currentScore > 9) {
-        currentLevel++;
-        levelChanged = true;
-    } else {
-        levelChanged = false;
-    }
-
-    if (levelChanged) {
-        levelTimer->stop();
-        currentScore = STARTING_SCORE;
-
-        if (currentLevel <= 0) {
-            currentScore = 0;
-            gameScore->showNewScore(currentScore);
-            gameScore->showScoreLed(pointWon);
+        if (gameScore->gameEnd()) {
             endGame();
-            return;
-        } else if (currentLevel > levelCount) {
-            currentScore = levelCount;
-            gameScore->showNewScore(currentScore);
-            gameScore->showScoreLed(pointWon);
-            endGame();
-            return;
+        } else {
+            // Get a new random point
+            randomPosition = getRandomPoint();
+            levelTimer->start();
         }
-
-        levelTimer = levelTimers[currentLevel - 1];
     }
-    gameScore->showNewScore(currentScore);
-    gameScore->showScoreLed(pointWon);
 }
 
 displayPoint getRandomPoint() {

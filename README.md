@@ -26,6 +26,12 @@ Note that if player doesn't do any action during 5 random cycles, the game will 
 
 # Changelog
 
+## 0.0.2 - 14/12/2021
+
+- Add 3 leds to indicate current level.
+- Refactor GameScore class to implement current level indicator logic.
+- Update the documentation according to needed electronic changes.
+
 ## 0.0.1 - 10/12/2021
 
 - First code revision of the game.

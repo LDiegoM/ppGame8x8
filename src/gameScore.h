@@ -6,7 +6,11 @@
 #include <timer.h>
 
 extern const byte STARTING_SCORE;
-extern byte currentScore;
+
+// Implements 3 game levels
+extern Timer* levelTimers[];
+extern byte levelCount;
+extern Timer* levelTimer;
 
 class GameScore {
     private:
@@ -15,15 +19,27 @@ class GameScore {
         // to a 74HC595 ic (shift registed)
         ShiftRegisters* m_shiftRegisters;
         byte m_shiftRegisterNumber;
+
+        byte m_currentLevel;
+        bool m_levelChanged = false;
+
         byte m_currentScore;
         bool m_pointWon;
+
+        bool m_gameEnd;
+
         Timer* m_ledTimer;
+
+        byte currentLevelToShiftValue();
 
     public:
         GameScore(ShiftRegisters* shiftRegisters, byte shiftRegisterNumber);
 
+        void resetScoreAndLevel();
+        void calculateScoreAndLevel(bool pointWon);
+        bool gameEnd();
         void showScoreLed(bool pointWon);
-        void showNewScore(byte score);
+        void showCurrentScore();
         void refresh();
 };
 
