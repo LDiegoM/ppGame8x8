@@ -29,6 +29,7 @@ Note that if player doesn't do any action during 5 random cycles, the game will 
 ## 1.0.0 - 15/12/2021
 
 - Refactor animation component.
+- Refactor GameScore component to hide public methods.
 
 ## 0.0.2 - 14/12/2021
 

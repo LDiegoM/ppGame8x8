@@ -89,16 +89,6 @@ bool GameScore::gameEnd() {
     return m_gameEnd;
 }
 
-void GameScore::showScoreLed(bool pointWon) {
-    m_pointWon = pointWon;
-    m_ledTimer->start();
-}
-
-void GameScore::showCurrentScore() {
-    m_shiftRegisters->setShiftValue(m_shiftRegisterNumber, currentLevelToShiftValue() + m_currentScore);
-    m_shiftRegisters->sendValues();
-}
-
 void GameScore::refresh() {
     // Send by default the leds turned off and no new value to 7 segment display.
     if (!m_ledTimer->isRunning())
@@ -127,4 +117,14 @@ byte GameScore::currentLevelToShiftValue() {
     }
     
     return 224; // 128 + 64 + 32 - All leds off
+}
+
+void GameScore::showScoreLed(bool pointWon) {
+    m_pointWon = pointWon;
+    m_ledTimer->start();
+}
+
+void GameScore::showCurrentScore() {
+    m_shiftRegisters->setShiftValue(m_shiftRegisterNumber, currentLevelToShiftValue() + m_currentScore);
+    m_shiftRegisters->sendValues();
 }
