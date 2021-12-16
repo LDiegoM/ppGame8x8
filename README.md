@@ -26,6 +26,10 @@ Note that if player doesn't do any action during 5 random cycles, the game will 
 
 # Changelog
 
+## 1.0.0 - 15/12/2021
+
+- Refactor animation component.
+
 ## 0.0.2 - 14/12/2021
 
 - Add 3 leds to indicate current level.
