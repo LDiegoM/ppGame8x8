@@ -31,6 +31,8 @@ class GameScore {
         Timer* m_ledTimer;
 
         byte currentLevelToShiftValue();
+        void showScoreLed(bool pointWon);
+        void showCurrentScore();
 
     public:
         GameScore(ShiftRegisters* shiftRegisters, byte shiftRegisterNumber);
@@ -38,8 +40,6 @@ class GameScore {
         void resetScoreAndLevel();
         void calculateScoreAndLevel(bool pointWon);
         bool gameEnd();
-        void showScoreLed(bool pointWon);
-        void showCurrentScore();
         void refresh();
 };
 

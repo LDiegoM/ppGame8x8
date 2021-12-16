@@ -4,8 +4,8 @@
     This class is a handler to send values to N ics 74HC595.
     For the game is configured with 3 shift registers:
     - 0: point with 7 segment display and luminic signals.
-    - 1: 8 by 8 display cathodes
-    - 2: 8 by 8 display anodes
+    - 1: 8x8 display cathodes
+    - 2: 8x8 display anodes
 
     Diego M. Lopez - 2021 (ldiegom@gmail.com)
 */

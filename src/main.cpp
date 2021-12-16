@@ -29,20 +29,19 @@ const byte pinButton = 2;
 // Use a disconnected analog pin to seed the random sequence
 const byte pinAnalogForRandomSeed = A2;
 
+// Display 8x8 handling
 Display64Led* display;
-Timer* animationTimer;
+
+// End game animation handling
+Animation* animation;
 
 // Game scopre handling
 GameScore* gameScore;
 
-displayPoint playerPosition, randomPosition;
-
- // Joystick handling
-int joystickXValue;
-int joystickYValue;
-
 // Button handling, avoiding bounce and sticky conditions
 Button* button;
+
+displayPoint playerPosition, randomPosition;
 
 bool gameRunning;
 
@@ -74,33 +73,28 @@ void setup() {
     gameScore = new GameScore(shiftRegisters, 0);
     display = new Display64Led(shiftRegisters, 1, 2);
     button = new Button(pinButton, buttonPressed);
+    animation = new Animation();
 
     gameRunning = false;
 
-    beginAnimation();
-    animationTimer = new Timer(40, ULONG_MAX, millis);
-    animationTimer->start();
+    animation->start();
 }
 
 void loop() {
     button->check();
 
     if (!gameRunning) {
-        if (animationTimer->isTime()) {
-            animateImage();
-        }
+        animation->refresh();
     } else {
         // Game is running
 
-        joystickXValue = analogRead(pinJoystickX);
-        playerPosition.x = map(joystickXValue, 0, 1024, 0, 8);
-
-        joystickYValue = analogRead(pinJoystickY);
-        playerPosition.y = map(joystickYValue, 0, 1024, 0, 8);
+        playerPosition.x = map(analogRead(pinJoystickX), 0, 1024, 0, 8);
+        playerPosition.y = map(analogRead(pinJoystickY), 0, 1024, 0, 8);
 
         if (levelTimer->isTime()) {
             noActionCount++;
             if (noActionCount >= MAX_NO_ACTION_CYCLES) {
+                // Player didn't do any action for last 5 cycles. Loses 1 point.
                 gameScore->calculateScoreAndLevel(false);
 
                 // Reset the no action counter
@@ -133,7 +127,7 @@ void startNewGame() {
     // Gets the first random point of the game
     randomPosition = getRandomPoint();
 
-    animationTimer->stop();
+    animation->stop();
     resetDisplayImage();
     gameRunning = true;
 
@@ -143,8 +137,7 @@ void startNewGame() {
 
 void endGame() {
     gameRunning = false;
-    beginAnimation();
-    animationTimer->start();
+    animation->start();
 }
 
 void buttonPressed() {
@@ -161,6 +154,8 @@ void buttonPressed() {
         } else {
             // Get a new random point
             randomPosition = getRandomPoint();
+
+            // Reset the time count for the next random point
             levelTimer->start();
         }
     }
