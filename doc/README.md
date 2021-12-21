@@ -17,6 +17,7 @@ This document describes the electronic construction of this project.
 - 1x bicolor led red/green.
 - 2x green led.
 - 1x yellow led.
+- 1x buzzer / piezo speaker.
 
 ## Electric diagram
 
