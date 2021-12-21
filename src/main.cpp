@@ -14,9 +14,9 @@
 #include <gameScore.h>
 #include <button.h>
 
-const byte pinShiftData     = 3;  // Pin conectado a DS pin 14 de 74HC595
-const byte pinShiftClock    = 4;  // Pin conectado a SHCP pin 11 de 74HC595
-const byte pinShiftRegister = 5;  // Pin conectado a STCP pin 12 de 74HC595
+const byte pinShiftData     = 3;  // Pin connected to SER   pin 14 de 74HC595
+const byte pinShiftClock    = 4;  // Pin connected to SRCLK pin 11 de 74HC595
+const byte pinShiftRegister = 5;  // Pin connected to RCLK  pin 12 de 74HC595
 ShiftRegisters* shiftRegisters;
 
 // The joystick is composed by 2 potentiometers
@@ -28,6 +28,9 @@ const byte pinButton = 2;
 
 // Use a disconnected analog pin to seed the random sequence
 const byte pinAnalogForRandomSeed = A2;
+
+// The scoring sound indicator is connected to a PWM pin
+const byte pinBuzzer = 6;
 
 // Display 8x8 handling
 Display64Led* display;
@@ -70,7 +73,7 @@ void setup() {
     randomSeed(analogRead(pinAnalogForRandomSeed));
 
     shiftRegisters = new ShiftRegisters(pinShiftData, pinShiftClock, pinShiftRegister, 3);
-    gameScore = new GameScore(shiftRegisters, 0);
+    gameScore = new GameScore(shiftRegisters, 0, pinBuzzer);
     display = new Display64Led(shiftRegisters, 1, 2);
     button = new Button(pinButton, buttonPressed);
     animation = new Animation();

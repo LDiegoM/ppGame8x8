@@ -23,9 +23,10 @@ byte levelCount = sizeof(levelTimers) / sizeof(Timer*);
 Timer* levelTimer = levelTimers[0];
 
 //////////////////// Constructor
-GameScore::GameScore(ShiftRegisters* shiftRegisters, byte shiftRegisterNumber) {
+GameScore::GameScore(ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, byte pinBuzzer) {
     m_shiftRegisters = shiftRegisters;
     m_shiftRegisterNumber = shiftRegisterNumber;
+    m_pinBuzzer = pinBuzzer;
 
     m_currentLevel = 0;
     m_currentScore = 0;
@@ -49,10 +50,13 @@ void GameScore::resetScoreAndLevel() {
 }
 
 void GameScore::calculateScoreAndLevel(bool pointWon) {
-    if (pointWon)
+    if (pointWon) {
         m_currentScore++;
-    else
+        tone(m_pinBuzzer, WON_TONE, 100);
+    } else {
         m_currentScore--;
+        tone(m_pinBuzzer, LOSE_TONE, 100);
+    }
 
     if (m_currentScore == 0) {
         m_currentLevel--;

@@ -30,12 +30,16 @@ class GameScore {
 
         Timer* m_ledTimer;
 
+        byte m_pinBuzzer;
+        const unsigned int WON_TONE  = 2093;
+        const unsigned int LOSE_TONE = 1047;
+
         byte currentLevelToShiftValue();
         void showScoreLed(bool pointWon);
         void showCurrentScore();
 
     public:
-        GameScore(ShiftRegisters* shiftRegisters, byte shiftRegisterNumber);
+        GameScore(ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, byte pinBuzzer);
 
         void resetScoreAndLevel();
         void calculateScoreAndLevel(bool pointWon);

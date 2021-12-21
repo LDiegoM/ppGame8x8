@@ -26,6 +26,10 @@ Note that if player doesn't do any action during 5 random cycles, the game will 
 
 # Changelog
 
+## 1.1.0 - 20/12/2021
+
+- Add sound indicator for scoring system.
+
 ## 1.0.0 - 15/12/2021
 
 - Refactor animation component.
