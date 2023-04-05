@@ -12,35 +12,6 @@
 #include <display64led.h>
 #include <shiftRegisters.h>
 
-byte displayImage[8][8] = {
-  {0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0},
-};
-
-void resetDisplayImage() {
-    for (byte i = 0; i < 8; i++)
-        for (byte j = 0; j < 8; j++)
-            displayImage[i][j] = 0;
-}
-
-void composeGameDisplayImage(displayPoint playerPosition, displayPoint randomPosition) {
-    for (byte x = 0; x < 8; x++) {
-        for (byte y = 0; y < 8; y++) {
-            if ((playerPosition.x == x && playerPosition.y == y) || 
-                (randomPosition.x == x && randomPosition.y == y))
-                displayImage[x][y] = 1;
-            else
-                displayImage[x][y] = 0;
-        }
-    }
-}
-
 //////////////////// Constructor
 Display64Led::Display64Led(ShiftRegisters* shiftRegisters, byte shiftRegisterHigh, byte shiftRegisterLow) {
     m_shiftRegisters = shiftRegisters;
@@ -59,15 +30,25 @@ void Display64Led::refresh() {
         }
         for (byte y = 0; y < 8; y++) {
             if (m_pointX[x] == 0) {
-                m_pointX[x] = displayImage[x][y];
+                m_pointX[x] = m_displayImage[x][y];
             }
-            m_pointY[y] = displayImage[x][y];
+            m_pointY[y] = m_displayImage[x][y];
         }
 
         m_shiftRegisters->setShiftValue(m_shiftRegisterHigh, 255 - decFromBin(m_pointY));
         m_shiftRegisters->setShiftValue(m_shiftRegisterLow, decFromBin(m_pointX));
         m_shiftRegisters->sendValues();
     }
+}
+
+void Display64Led::resetDisplayImage() {
+    for (byte i = 0; i < 8; i++)
+        for (byte j = 0; j < 8; j++)
+            m_displayImage[i][j] = 0;
+}
+
+void Display64Led::setPixel(byte x, byte y, bool turnOn) {
+    m_displayImage[x][y] = (turnOn ? 1 : 0);
 }
 
 //////////////////// Private methods implementation

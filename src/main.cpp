@@ -57,6 +57,7 @@ void endGame();
 void buttonPressed();
 displayPoint getRandomPoint();
 bool evaluateHitOrMiss();
+void composeGameDisplayImage(displayPoint playerPosition, displayPoint randomPosition);
 
 void setup() {
     Serial.begin(9600);
@@ -76,7 +77,7 @@ void setup() {
     gameScore = new GameScore(shiftRegisters, 0, pinBuzzer);
     display = new Display64Led(shiftRegisters, 1, 2);
     button = new Button(pinButton, buttonPressed);
-    animation = new Animation();
+    animation = new Animation(display);
 
     gameRunning = false;
 
@@ -131,7 +132,7 @@ void startNewGame() {
     randomPosition = getRandomPoint();
 
     animation->stop();
-    resetDisplayImage();
+    display->resetDisplayImage();
     gameRunning = true;
 
     // Start the current level timer
@@ -181,4 +182,16 @@ displayPoint getRandomPoint() {
 
 bool evaluateHitOrMiss() {
     return playerPosition.x == randomPosition.x && playerPosition.y == randomPosition.y;
+}
+
+void composeGameDisplayImage(displayPoint playerPosition, displayPoint randomPosition) {
+    for (byte x = 0; x < 8; x++) {
+        for (byte y = 0; y < 8; y++) {
+            if ((playerPosition.x == x && playerPosition.y == y) || 
+                (randomPosition.x == x && randomPosition.y == y))
+                display->setPixel(x, y, true);
+            else
+                display->setPixel(x, y, false);
+        }
+    }
 }

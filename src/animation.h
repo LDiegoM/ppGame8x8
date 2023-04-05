@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 #include <timer.h>
+#include <display64led.h>
+
 
 struct animationPoint {
     bool value;
@@ -22,11 +24,12 @@ class Animation {
         
         byte m_currentAnimationPoint;
         Timer* m_animationTimer;
+        Display64Led *m_display;
 
         void animateImage();
 
     public:
-        Animation();
+        Animation(Display64Led *display);
 
         void start();
         void refresh();
