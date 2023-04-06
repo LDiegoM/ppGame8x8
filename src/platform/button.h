@@ -1,8 +1,7 @@
 #ifndef button_h
 #define button_h
 
-#include <Arduino.h>
-#include <timer.h>
+#include <platform/timer.h>
 
 class Button {
     private:

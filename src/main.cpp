@@ -4,15 +4,12 @@
     Diego M. Lopez - 2021 (ldiegom@gmail.com)
 */
 
-#include <Arduino.h>
-#include <limits.h>
-
-#include <shiftRegisters.h>
-#include <display64led.h>
-#include <timer.h>
+#include <platform/shiftRegisters.h>
+#include <platform/display64led.h>
+#include <platform/timer.h>
+#include <platform/button.h>
 #include <animation.h>
 #include <gameScore.h>
-#include <button.h>
 
 const byte pinShiftData     = 3;  // Pin connected to SER   pin 14 de 74HC595
 const byte pinShiftClock    = 4;  // Pin connected to SRCLK pin 11 de 74HC595

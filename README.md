@@ -29,6 +29,7 @@ Note that if player doesn't do any action during 5 random cycles, the game will 
 ## Unreleased
 
 - Refactor display class.
+- Refactor platform code.
 
 ## 1.1.0 - 20/12/2021
 

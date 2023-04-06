@@ -1,9 +1,8 @@
 #ifndef animation_h
 #define animation_h
 
-#include <Arduino.h>
-#include <timer.h>
-#include <display64led.h>
+#include <platform/timer.h>
+#include <platform/display64led.h>
 
 
 struct animationPoint {

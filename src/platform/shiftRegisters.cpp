@@ -10,7 +10,7 @@
     Diego M. Lopez - 2021 (ldiegom@gmail.com)
 */
 
-#include <shiftRegisters.h>
+#include <platform/shiftRegisters.h>
 
 ShiftRegisters::ShiftRegisters(byte pinShiftData, byte pinShiftClock, byte pinShiftRegister,
                                byte shiftCount) {

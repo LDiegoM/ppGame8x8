@@ -1,6 +1,9 @@
 #ifndef timer_h
 #define timer_h
 
+#include <Arduino.h>
+#include <limits.h>
+
 class Timer {
     private:
         unsigned long(*m_millis_callback)();
@@ -8,6 +11,7 @@ class Timer {
         bool m_running;
     
     public:
+        Timer(unsigned long duration);
         Timer(unsigned long duration, unsigned long ulong_max, unsigned long(*millis_callback)());
 
         void start();
