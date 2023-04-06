@@ -20,18 +20,19 @@
 */
 
 //////////////////// Constructor
-Animation::Animation() {
+Animation::Animation(Display64Led *display) {
     m_animationTimer = new Timer(40, ULONG_MAX, millis);
+    m_display = display;
 }
 
 //////////////////// Public methods implementation
 void Animation::start() {
-    resetDisplayImage();
+    m_display->resetDisplayImage();
     m_currentAnimationPoint = 0;
     for (byte i = 0; i < lenAnimationPoints; i++) {
         animationPoint* point = &animationPoints[i];
         point->value = true;
-        displayImage[point->x][point->y] = 1;
+        m_display->setPixel(point->x, point->y, point->value);
     }
     m_animationTimer->start();
 }
@@ -49,7 +50,7 @@ void Animation::stop() {
 void Animation::animateImage() {
     animationPoint* point = &animationPoints[m_currentAnimationPoint];
     point->value = !point->value;
-    displayImage[point->x][point->y] = (point->value ? 1 : 0);
+    m_display->setPixel(point->x, point->y, point->value);
 
     m_currentAnimationPoint++;
     if (m_currentAnimationPoint >= lenAnimationPoints)

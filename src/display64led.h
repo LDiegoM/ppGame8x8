@@ -9,12 +9,18 @@ struct displayPoint {
     byte y;
 };
 
-extern byte displayImage[8][8];
-void resetDisplayImage();
-void composeGameDisplayImage(displayPoint playerPosition, displayPoint randomPosition);
-
 class Display64Led {
     private:
+        byte m_displayImage[8][8] = {
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+        };
         byte m_pointX[8];
         byte m_pointY[8];
 
@@ -37,6 +43,8 @@ class Display64Led {
         Display64Led(ShiftRegisters* shiftRegisters, byte shiftRegisterHigh, byte shiftRegisterLow);
 
         void refresh();
+        void resetDisplayImage();
+        void setPixel(byte x, byte y, bool on);
 };
 
 #endif
