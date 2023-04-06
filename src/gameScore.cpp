@@ -10,14 +10,13 @@
     Diego M. Lopez - 2021 (ldiegom@gmail.com)
 */
 
-#include <limits.h>
 #include <gameScore.h>
 
 const byte STARTING_SCORE = 3;
 Timer* levelTimers[] = {
-    new Timer(2000, ULONG_MAX, millis),
-    new Timer(1250, ULONG_MAX, millis),
-    new Timer(800, ULONG_MAX, millis)
+    new Timer(2000),
+    new Timer(1250),
+    new Timer(800)
 };
 byte levelCount = sizeof(levelTimers) / sizeof(Timer*);
 Timer* levelTimer = levelTimers[0];
@@ -32,7 +31,7 @@ GameScore::GameScore(ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, b
     m_currentScore = 0;
     showCurrentScore();
 
-    m_ledTimer = new Timer(500, ULONG_MAX, millis);
+    m_ledTimer = new Timer(500);
 }
 
 //////////////////// Public methods implementation

@@ -1,9 +1,8 @@
 #ifndef gameScore_h
 #define gameScore_h
 
-#include <Arduino.h>
-#include <shiftRegisters.h>
-#include <timer.h>
+#include <platform/shiftRegisters.h>
+#include <platform/timer.h>
 
 extern const byte STARTING_SCORE;
 

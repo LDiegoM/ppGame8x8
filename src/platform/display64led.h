@@ -1,8 +1,7 @@
 #ifndef display64led_h
 #define display64led_h
 
-#include <Arduino.h>
-#include <shiftRegisters.h>
+#include <platform/shiftRegisters.h>
 
 struct displayPoint {
     byte x;

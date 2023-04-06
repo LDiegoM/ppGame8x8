@@ -10,7 +10,16 @@
     Diego M. Lopez - 2021 (ldiegom@gmail.com)
 */
 
-#include <timer.h>
+#include <platform/timer.h>
+
+Timer::Timer(unsigned long duration) {
+    m_duration = duration;
+    m_millis_callback = millis;
+    m_last_millis = 0;
+    m_ulong_max = ULONG_MAX;
+    m_reset_gap = 0;
+    m_running = false;
+}
 
 Timer::Timer(unsigned long duration, unsigned long ulong_max, unsigned long(*millis_callback)()) {
     m_duration = duration;

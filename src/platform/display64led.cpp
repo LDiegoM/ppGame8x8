@@ -9,8 +9,7 @@
     Diego M. Lopez - 2021 (ldiegom@gmail.com)
 */
 
-#include <display64led.h>
-#include <shiftRegisters.h>
+#include <platform/display64led.h>
 
 //////////////////// Constructor
 Display64Led::Display64Led(ShiftRegisters* shiftRegisters, byte shiftRegisterHigh, byte shiftRegisterLow) {

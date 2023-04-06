@@ -5,8 +5,6 @@
 */
 
 #include <animation.h>
-#include <display64led.h>
-#include <limits.h>
 
 /* This represents the initial animation image
 {0, 0, 0, 1, 1, 0, 0, 0}
@@ -21,7 +19,7 @@
 
 //////////////////// Constructor
 Animation::Animation(Display64Led *display) {
-    m_animationTimer = new Timer(40, ULONG_MAX, millis);
+    m_animationTimer = new Timer(40);
     m_display = display;
 }
 

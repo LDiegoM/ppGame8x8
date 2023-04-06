@@ -6,17 +6,16 @@
     Diego M. Lopez - 2021 (ldiegom@gmail.com)
 */
 
-#include <button.h>
-#include <limits.h>
+#include <platform/button.h>
 
 Button::Button(byte pinButton, void (*handler)()) {
     m_pinButton = pinButton;
     m_handler = handler;
-    m_antiBounceTimer = new Timer(100, ULONG_MAX, millis);
+    m_antiBounceTimer = new Timer(100);
 
     pinMode(m_pinButton, INPUT);
 
-    // TODO: The button now works only for PULLDOWN configuration. Add PULLUP capability configurable by constructor.
+    // The button now works only for PULLDOWN configuration. Add PULLUP capability configurable by constructor.
     m_buttonValue = LOW;
     m_buttonAlreadyPressed = false;
 
