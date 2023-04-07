@@ -4,7 +4,7 @@
     Diego M. Lopez - 2021 (ldiegom@gmail.com)
 */
 
-#include <animation.h>
+#include <common/animation.h>
 
 /* This represents the initial animation image
 {0, 0, 0, 1, 1, 0, 0, 0}

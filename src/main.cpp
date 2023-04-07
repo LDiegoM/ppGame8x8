@@ -8,8 +8,9 @@
 #include <platform/display64led.h>
 #include <platform/timer.h>
 #include <platform/button.h>
-#include <animation.h>
-#include <gameScore.h>
+#include <common/animation.h>
+#include <ppGameLevel.h>
+#include <common/gameScore.h>
 
 const byte pinShiftData     = 3;  // Pin connected to SER   pin 14 de 74HC595
 const byte pinShiftClock    = 4;  // Pin connected to SRCLK pin 11 de 74HC595
@@ -35,7 +36,10 @@ Display64Led* display;
 // End game animation handling
 Animation* animation;
 
-// Game scopre handling
+// Game level handling
+PPGameLevel* gameLevel;
+
+// Game score handling
 GameScore* gameScore;
 
 // Button handling, avoiding bounce and sticky conditions
@@ -71,7 +75,8 @@ void setup() {
     randomSeed(analogRead(pinAnalogForRandomSeed));
 
     shiftRegisters = new ShiftRegisters(pinShiftData, pinShiftClock, pinShiftRegister, 3);
-    gameScore = new GameScore(shiftRegisters, 0, pinBuzzer);
+    gameLevel = new PPGameLevel();
+    gameScore = new GameScore(gameLevel, shiftRegisters, 0, pinBuzzer);
     display = new Display64Led(shiftRegisters, 1, 2);
     button = new Button(pinButton, buttonPressed);
     animation = new Animation(display);
@@ -92,11 +97,11 @@ void loop() {
         playerPosition.x = map(analogRead(pinJoystickX), 0, 1024, 0, 8);
         playerPosition.y = map(analogRead(pinJoystickY), 0, 1024, 0, 8);
 
-        if (levelTimer->isTime()) {
+        if (gameLevel->verifyLevel()) {
             noActionCount++;
             if (noActionCount >= MAX_NO_ACTION_CYCLES) {
                 // Player didn't do any action for last 5 cycles. Loses 1 point.
-                gameScore->calculateScoreAndLevel(false);
+                gameScore->calculate(false);
 
                 // Reset the no action counter
                 noActionCount = 0;
@@ -120,7 +125,7 @@ void loop() {
 }
 
 void startNewGame() {
-    gameScore->resetScoreAndLevel();
+    gameScore->reset();
 
     // Reset the no action counter
     noActionCount = 0;
@@ -133,7 +138,7 @@ void startNewGame() {
     gameRunning = true;
 
     // Start the current level timer
-    levelTimer->start();
+    gameLevel->restartLevel();
 }
 
 void endGame() {
@@ -145,7 +150,7 @@ void buttonPressed() {
     if (!gameRunning) {
         startNewGame();
     } else {
-        gameScore->calculateScoreAndLevel(evaluateHitOrMiss());
+        gameScore->calculate(evaluateHitOrMiss());
 
         // Reset the no action counter
         noActionCount = 0;
@@ -157,7 +162,7 @@ void buttonPressed() {
             randomPosition = getRandomPoint();
 
             // Reset the time count for the next random point
-            levelTimer->start();
+            gameLevel->restartLevel();
         }
     }
 }
