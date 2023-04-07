@@ -30,6 +30,7 @@ Note that if player doesn't do any action during 5 random cycles, the game will 
 
 - Refactor display class.
 - Refactor platform code.
+- Refactor game level and score code.
 
 ## 1.1.0 - 20/12/2021
 

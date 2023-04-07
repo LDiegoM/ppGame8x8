@@ -10,24 +10,15 @@
     Diego M. Lopez - 2021 (ldiegom@gmail.com)
 */
 
-#include <gameScore.h>
-
-const byte STARTING_SCORE = 3;
-Timer* levelTimers[] = {
-    new Timer(2000),
-    new Timer(1250),
-    new Timer(800)
-};
-byte levelCount = sizeof(levelTimers) / sizeof(Timer*);
-Timer* levelTimer = levelTimers[0];
+#include <common/gameScore.h>
 
 //////////////////// Constructor
-GameScore::GameScore(ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, byte pinBuzzer) {
+GameScore::GameScore(CommonGameLevel *gameLevel, ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, byte pinBuzzer) {
+    m_gameLevel = gameLevel;
     m_shiftRegisters = shiftRegisters;
     m_shiftRegisterNumber = shiftRegisterNumber;
     m_pinBuzzer = pinBuzzer;
 
-    m_currentLevel = 0;
     m_currentScore = 0;
     showCurrentScore();
 
@@ -35,12 +26,11 @@ GameScore::GameScore(ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, b
 }
 
 //////////////////// Public methods implementation
-void GameScore::resetScoreAndLevel() {
+void GameScore::reset() {
     m_gameEnd = false;
 
     // Choose the easiest game level
-    m_currentLevel = 1;
-    levelTimer = levelTimers[m_currentLevel - 1];
+    m_gameLevel->reset();
     m_levelChanged = false;
 
     // Game starts with score = 3
@@ -48,7 +38,7 @@ void GameScore::resetScoreAndLevel() {
     showCurrentScore();
 }
 
-void GameScore::calculateScoreAndLevel(bool pointWon) {
+void GameScore::calculate(bool pointWon) {
     if (pointWon) {
         m_currentScore++;
         tone(m_pinBuzzer, WON_TONE, 100);
@@ -58,30 +48,28 @@ void GameScore::calculateScoreAndLevel(bool pointWon) {
     }
 
     if (m_currentScore == 0) {
-        m_currentLevel--;
+        m_gameLevel->decLevel();
         m_levelChanged = true;
     } else if (m_currentScore > 9) {
-        m_currentLevel++;
+        m_gameLevel->incLevel();
         m_levelChanged = true;
     } else {
         m_levelChanged = false;
     }
 
     if (m_levelChanged) {
-        levelTimer->stop();
         m_currentScore = STARTING_SCORE;
 
-        if (m_currentLevel <= 0) {
+        if (m_gameLevel->currentLevel() <= 0) {
             m_currentScore = 0;
             m_gameEnd = true;
-        } else if (m_currentLevel > levelCount) {
-            m_currentScore = levelCount;
+        } else if (m_gameLevel->currentLevel() > m_gameLevel->levelCount()) {
+            m_currentScore = m_gameLevel->levelCount();
             m_gameEnd = true;
         }
 
-        if (m_currentLevel >= 1 && m_currentLevel <= levelCount) {
-            levelTimer = levelTimers[m_currentLevel - 1];
-            levelTimer->start();
+        if (m_gameLevel->currentLevel() >= 1 && m_gameLevel->currentLevel() <= m_gameLevel->levelCount()) {
+            m_gameLevel->restartLevel();
         }
     }
     showCurrentScore();
@@ -106,7 +94,7 @@ void GameScore::refresh() {
 
 //////////////////// Private methods implementation
 byte GameScore::currentLevelToShiftValue() {
-    switch (m_currentLevel) {
+    switch (m_gameLevel->currentLevel()) {
         case 0:
             return 224; // 128 + 64 + 32 - All leds off
         case 1:

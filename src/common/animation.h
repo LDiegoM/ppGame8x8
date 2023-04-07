@@ -4,7 +4,6 @@
 #include <platform/timer.h>
 #include <platform/display64led.h>
 
-
 struct animationPoint {
     bool value;
     byte x;

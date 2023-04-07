@@ -3,13 +3,7 @@
 
 #include <platform/shiftRegisters.h>
 #include <platform/timer.h>
-
-extern const byte STARTING_SCORE;
-
-// Implements 3 game levels
-extern Timer* levelTimers[];
-extern byte levelCount;
-extern Timer* levelTimer;
+#include <common/gameLevel.h>
 
 class GameScore {
     private:
@@ -18,10 +12,11 @@ class GameScore {
         // to a 74HC595 ic (shift registed)
         ShiftRegisters* m_shiftRegisters;
         byte m_shiftRegisterNumber;
+        CommonGameLevel *m_gameLevel;
 
-        byte m_currentLevel;
         bool m_levelChanged = false;
 
+        const byte STARTING_SCORE = 3;
         byte m_currentScore;
         bool m_pointWon;
 
@@ -38,10 +33,10 @@ class GameScore {
         void showCurrentScore();
 
     public:
-        GameScore(ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, byte pinBuzzer);
+        GameScore(CommonGameLevel *gameLevel, ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, byte pinBuzzer);
 
-        void resetScoreAndLevel();
-        void calculateScoreAndLevel(bool pointWon);
+        void reset();
+        void calculate(bool pointWon);
         bool gameEnd();
         void refresh();
 };
