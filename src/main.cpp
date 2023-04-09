@@ -8,6 +8,7 @@
 #include <platform/display64led.h>
 #include <platform/timer.h>
 #include <platform/button.h>
+#include <platform/joystick.h>
 #include <common/animation.h>
 #include <ppGameLevel.h>
 #include <common/gameScore.h>
@@ -45,6 +46,9 @@ GameScore* gameScore;
 // Button handling, avoiding bounce and sticky conditions
 Button* button;
 
+// Joystick handling
+Joystick* joystick;
+
 displayPoint playerPosition, randomPosition;
 
 bool gameRunning;
@@ -79,6 +83,7 @@ void setup() {
     gameScore = new GameScore(gameLevel, shiftRegisters, 0, pinBuzzer);
     display = new Display64Led(shiftRegisters, 1, 2);
     button = new Button(pinButton, buttonPressed);
+    joystick = new Joystick(pinJoystickX, pinJoystickY);
     animation = new Animation(display);
 
     gameRunning = false;
@@ -94,8 +99,7 @@ void loop() {
     } else {
         // Game is running
 
-        playerPosition.x = map(analogRead(pinJoystickX), 0, 1024, 0, 8);
-        playerPosition.y = map(analogRead(pinJoystickY), 0, 1024, 0, 8);
+        playerPosition = joystick->getPosition();
 
         if (gameLevel->verifyLevel()) {
             noActionCount++;
