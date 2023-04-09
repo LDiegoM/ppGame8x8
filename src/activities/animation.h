@@ -3,8 +3,9 @@
 
 #include <platform/timer.h>
 #include <platform/display64led.h>
+#include <common/activity.h>
 
-class Animation {
+class Animation : public Activity {
     private:
         struct animationPoint {
             bool value;
@@ -22,16 +23,17 @@ class Animation {
         
         byte m_currentAnimationPoint;
         Timer* m_animationTimer;
-        Display64Led *m_display;
+        Display64Led* m_display;
 
         void animateImage();
 
     public:
-        Animation(Display64Led *display);
+        Animation(Display64Led* display);
 
+        String className();
         void start();
-        void refresh();
-        void stop();
+        bool loop();
+        void action();
 };
 
 #endif

@@ -1,4 +1,4 @@
-#include <ppGameLevel.h>
+#include <activities/ppGame/level.h>
 
 //////////////////// Constructor
 PPGameLevel::PPGameLevel() {
@@ -26,7 +26,7 @@ void PPGameLevel::restartLevel() {
     m_currentLevelTimer->start();
 }
 
-bool PPGameLevel::verifyLevel() {
+bool PPGameLevel::verifyLevelLimit() {
     return m_currentLevelTimer->isTime();
 }
 

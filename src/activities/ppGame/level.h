@@ -1,8 +1,8 @@
 #ifndef ppGameLevel_h
 #define ppGameLevel_h
 
-#include <common/gameLevel.h>
 #include <platform/timer.h>
+#include <common/gameLevel.h>
 
 class PPGameLevel : public CommonGameLevel {
     private:
@@ -20,7 +20,7 @@ class PPGameLevel : public CommonGameLevel {
         void incLevel();
         void decLevel();
         void restartLevel();
-        bool verifyLevel();
+        bool verifyLevelLimit();
 };
 
 #endif

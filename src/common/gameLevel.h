@@ -18,7 +18,7 @@ class CommonGameLevel {
         virtual void incLevel() = 0;
         virtual void decLevel() = 0;
         virtual void restartLevel() = 0;
-        virtual bool verifyLevel() = 0;
+        virtual bool verifyLevelLimit() = 0;
 };
 
 #endif
