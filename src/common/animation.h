@@ -4,14 +4,14 @@
 #include <platform/timer.h>
 #include <platform/display64led.h>
 
-struct animationPoint {
-    bool value;
-    byte x;
-    byte y;
-};
-
 class Animation {
     private:
+        struct animationPoint {
+            bool value;
+            byte x;
+            byte y;
+        };
+
         animationPoint animationPoints[24] = {
             {true, 0, 4}, {true, 1, 5}, {true, 1, 6}, {true, 3, 4}, {true, 2, 6}, {true, 3, 7},
             {true, 4, 7}, {true, 5, 6}, {true, 6, 6}, {true, 4, 4}, {true, 6, 5}, {true, 7, 4},
