@@ -11,6 +11,7 @@
 #include <platform/joystick.h>
 #include <common/gameScore.h>
 #include <activities/animation.h>
+#include <activities/selector.h>
 #include <activities/ppGame/level.h>
 #include <activities/ppGame/game.h>
 
@@ -44,6 +45,9 @@ Joystick* joystick;
 // End game animation handling
 Animation* animation;
 
+// Activity selection handling
+Selector* selector;
+
 // Game level handling
 PPGameLevel* ppGameLevel;
 
@@ -72,11 +76,15 @@ void setup() {
 
     animation = new Animation(display);
 
+    selector = new Selector(display, joystick);
+
     ppGameLevel = new PPGameLevel();
     ppGameScore = new GameScore(ppGameLevel, shiftRegisters, 0, pinBuzzer);
     ppGame = new PPGame(display, joystick, ppGameLevel, ppGameScore);
 
-    animation->addNextActivity(ppGame);
+    animation->addNextActivity(selector);
+    selector->addNextActivity(animation);
+    selector->addNextActivity(ppGame);
     ppGame->addNextActivity(animation);
 
     currentActivity = animation;
@@ -89,6 +97,8 @@ void loop() {
 
     if (!currentActivity->loop()) {
         currentActivity = currentActivity->getNextActivity();
+        if (currentActivity == NULL)
+            currentActivity = animation;
         currentActivity->start();
     }
 
