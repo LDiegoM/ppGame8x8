@@ -14,6 +14,12 @@
 
 ShiftRegisters::ShiftRegisters(byte pinShiftData, byte pinShiftClock, byte pinShiftRegister,
                                byte shiftCount) {
+    // Set shift registers pins as OUTPUT
+    pinMode(pinShiftRegister, OUTPUT);
+    pinMode(pinShiftClock, OUTPUT);
+    pinMode(pinShiftData, OUTPUT);
+    digitalWrite(pinShiftRegister, LOW);
+
     m_pinShiftData = pinShiftData;
     m_pinShiftClock = pinShiftClock;
     m_pinShiftRegister = pinShiftRegister;
