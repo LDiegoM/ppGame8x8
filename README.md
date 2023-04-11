@@ -35,6 +35,7 @@ Note that if player doesn't do any action during 5 random cycles, the game will 
 - Refactor game level and score code.
 - Refactor joystic code.
 - Refactor ppGame as an Activity.
+- Add activity selector.
 
 ### 1.1.0 - 20/12/2021
 
