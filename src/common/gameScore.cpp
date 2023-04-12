@@ -13,11 +13,13 @@
 #include <common/gameScore.h>
 
 //////////////////// Constructor
-GameScore::GameScore(CommonGameLevel *gameLevel, ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, byte pinBuzzer) {
+GameScore::GameScore(CommonGameLevel *gameLevel, ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, byte pinBuzzer,
+                     byte startingScore) {
     m_gameLevel = gameLevel;
     m_shiftRegisters = shiftRegisters;
     m_shiftRegisterNumber = shiftRegisterNumber;
     m_pinBuzzer = pinBuzzer;
+    m_startingScore = startingScore;
 
     m_currentScore = 0;
     showCurrentScore();
@@ -33,8 +35,8 @@ void GameScore::reset() {
     m_gameLevel->reset();
     m_levelChanged = false;
 
-    // Game starts with score = 3
-    m_currentScore = STARTING_SCORE;
+    // Game starts with given score
+    m_currentScore = m_startingScore;
     showCurrentScore();
 }
 
@@ -58,7 +60,7 @@ void GameScore::calculate(bool pointWon) {
     }
 
     if (m_levelChanged) {
-        m_currentScore = STARTING_SCORE;
+        m_currentScore = m_startingScore;
 
         if (m_gameLevel->currentLevel() <= 0) {
             m_currentScore = 0;
@@ -74,6 +76,11 @@ void GameScore::calculate(bool pointWon) {
     }
     showCurrentScore();
     showScoreLed(pointWon);
+}
+
+void GameScore::showScoreLed(bool pointWon) {
+    m_pointWon = pointWon;
+    m_ledTimer->start();
 }
 
 bool GameScore::gameEnd() {
@@ -108,11 +115,6 @@ byte GameScore::currentLevelToShiftValue() {
     }
     
     return 224; // 128 + 64 + 32 - All leds off
-}
-
-void GameScore::showScoreLed(bool pointWon) {
-    m_pointWon = pointWon;
-    m_ledTimer->start();
 }
 
 void GameScore::showCurrentScore() {

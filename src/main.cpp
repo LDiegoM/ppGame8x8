@@ -14,6 +14,8 @@
 #include <activities/selector.h>
 #include <activities/ppGame/level.h>
 #include <activities/ppGame/game.h>
+#include <activities/paint/level.h>
+#include <activities/paint/paint.h>
 
 const byte pinShiftData     = 3;  // Pin connected to SER   pin 14 de 74HC595
 const byte pinShiftClock    = 4;  // Pin connected to SRCLK pin 11 de 74HC595
@@ -56,7 +58,12 @@ GameScore* ppGameScore;
 
 PPGame* ppGame;
 
+PaintLevel* paintLevel;
+GameScore* paintScore;
+Paint* paint;
+
 Activity* currentActivity;
+Activity* previousActivity;
 
 void buttonPressed();
 
@@ -79,15 +86,22 @@ void setup() {
     selector = new Selector(display, joystick);
 
     ppGameLevel = new PPGameLevel();
-    ppGameScore = new GameScore(ppGameLevel, shiftRegisters, 0, pinBuzzer);
+    ppGameScore = new GameScore(ppGameLevel, shiftRegisters, 0, pinBuzzer, 3);
     ppGame = new PPGame(display, joystick, ppGameLevel, ppGameScore);
+
+    paintLevel = new PaintLevel();
+    paintScore = new GameScore(paintLevel, shiftRegisters, 0, pinBuzzer, 0);
+    paint = new Paint(display, joystick, paintLevel, paintScore);
 
     animation->addNextActivity(selector);
     selector->addNextActivity(animation);
     selector->addNextActivity(ppGame);
+    selector->addNextActivity(paint);
     ppGame->addNextActivity(animation);
+    paint->addNextActivity(animation);
 
     currentActivity = animation;
+    previousActivity = currentActivity;
 
     animation->start();
 }
@@ -96,14 +110,20 @@ void loop() {
     button->check();
 
     if (!currentActivity->loop()) {
+        previousActivity = currentActivity;
         currentActivity = currentActivity->getNextActivity();
         if (currentActivity == NULL)
             currentActivity = animation;
         currentActivity->start();
     }
 
-    // In case of an activity ends and need to display something after finished, refresh all activities score.
-    ppGameScore->refresh();
+    if ((currentActivity->className().equals("PPGame")) || 
+        (currentActivity->className().equals("Animation") && previousActivity->className().equals("PPGame")))
+        ppGameScore->refresh();
+
+    if ((currentActivity->className().equals("Paint")) ||
+        (currentActivity->className().equals("Animation") && previousActivity->className().equals("Paint")))
+        paintScore->refresh();
 
     display->refresh();
 }
