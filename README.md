@@ -36,6 +36,7 @@ Note that if player doesn't do any action during 5 random cycles, the game will 
 - Refactor joystic code.
 - Refactor ppGame as an Activity.
 - Add activity selector.
+- Add activity paint.
 
 ### 1.1.0 - 20/12/2021
 

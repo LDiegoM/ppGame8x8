@@ -16,7 +16,7 @@ class GameScore {
 
         bool m_levelChanged = false;
 
-        const byte STARTING_SCORE = 3;
+        byte m_startingScore;
         byte m_currentScore;
         bool m_pointWon;
 
@@ -29,14 +29,15 @@ class GameScore {
         const unsigned int LOSE_TONE = 1047;
 
         byte currentLevelToShiftValue();
-        void showScoreLed(bool pointWon);
         void showCurrentScore();
 
     public:
-        GameScore(CommonGameLevel *gameLevel, ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, byte pinBuzzer);
+        GameScore(CommonGameLevel *gameLevel, ShiftRegisters* shiftRegisters, byte shiftRegisterNumber, byte pinBuzzer,
+                  byte startingScore);
 
         void reset();
         void calculate(bool pointWon);
+        void showScoreLed(bool pointWon);
         bool gameEnd();
         void refresh();
 };
