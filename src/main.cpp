@@ -16,6 +16,8 @@
 #include <activities/ppGame/game.h>
 #include <activities/paint/level.h>
 #include <activities/paint/paint.h>
+#include <activities/tetris/level.h>
+#include <activities/tetris/game.h>
 
 const byte pinShiftData     = 3;  // Pin connected to SER   pin 14 de 74HC595
 const byte pinShiftClock    = 4;  // Pin connected to SRCLK pin 11 de 74HC595
@@ -50,17 +52,20 @@ Animation* animation;
 // Activity selection handling
 Selector* selector;
 
-// Game level handling
+// ppGame objects
 PPGameLevel* ppGameLevel;
-
-// Game score handling
 GameScore* ppGameScore;
-
 PPGame* ppGame;
 
+// Paint objects
 PaintLevel* paintLevel;
 GameScore* paintScore;
 Paint* paint;
+
+// Tetris objects
+TetrisLevel* tetrisLevel;
+GameScore* tetrisScore;
+Tetris* tetris;
 
 Activity* currentActivity;
 Activity* previousActivity;
@@ -93,12 +98,18 @@ void setup() {
     paintScore = new GameScore(paintLevel, shiftRegisters, 0, pinBuzzer, 0);
     paint = new Paint(display, joystick, paintLevel, paintScore);
 
+    tetrisLevel = new TetrisLevel();
+    tetrisScore = new GameScore(tetrisLevel, shiftRegisters, 0, pinButton, 0);
+    tetris = new Tetris(display, joystick, tetrisLevel, tetrisScore);
+
     animation->addNextActivity(selector);
     selector->addNextActivity(animation);
     selector->addNextActivity(ppGame);
     selector->addNextActivity(paint);
+    selector->addNextActivity(tetris);
     ppGame->addNextActivity(animation);
     paint->addNextActivity(animation);
+    tetris->addNextActivity(animation);
 
     currentActivity = animation;
     previousActivity = currentActivity;

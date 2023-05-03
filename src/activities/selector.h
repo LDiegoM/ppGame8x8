@@ -8,7 +8,7 @@
 
 class Selector : public Activity {
     private:
-        const byte MIN_VALUE = 0, MAX_VALUE = 2;
+        const byte MIN_VALUE = 0, MAX_VALUE = 3;
 
         Numbers* m_numbers;
         Display64Led* m_display;

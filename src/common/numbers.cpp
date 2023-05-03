@@ -17,6 +17,9 @@ void Numbers::printNumber(byte number) {
     case 2:
         printTwo();
         break;
+    case 3:
+        printThree();
+        break;
     default:
         break;
     }
@@ -39,4 +42,10 @@ void Numbers::printTwo() {
     for (byte i = 0; i < 8; i++)
         for (byte j = 0; j < 8; j++)
             m_display->setPixel(i, j, (two[i][j] == 1 ? true : false));
+}
+
+void Numbers::printThree() {
+    for (byte i = 0; i < 8; i++)
+        for (byte j = 0; j < 8; j++)
+            m_display->setPixel(i, j, (three[i][j] == 1 ? true : false));
 }

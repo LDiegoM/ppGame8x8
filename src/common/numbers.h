@@ -39,11 +39,23 @@ class Numbers {
             {1, 1, 1, 1, 1, 1, 1, 1},
         };
 
+        byte three[8][8] = {
+            {1, 1, 1, 1, 1, 1, 1, 0},
+            {1, 1, 1, 1, 1, 1, 1, 1},
+            {0, 0, 0, 0, 0, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1, 0},
+            {1, 1, 1, 1, 1, 1, 1, 0},
+            {0, 0, 0, 0, 0, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 1, 1, 1, 1, 1, 1, 0},
+        };
+
         Display64Led* m_display;
 
         void printZero();
         void printOne();
         void printTwo();
+        void printThree();
 
     public:
         Numbers(Display64Led* display);
